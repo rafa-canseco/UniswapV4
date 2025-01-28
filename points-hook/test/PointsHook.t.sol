@@ -49,7 +49,7 @@ contract TestPointsHook is Test, Deployers {
             address(flags)
         );
         
-        //Deployar nuestrp hook
+        //Deployar nuestro hook
         hook = PointsHook(address(flags));
         
         //Aprovar nuestro TOKEN para que sea gastado por el swap router
@@ -58,7 +58,7 @@ contract TestPointsHook is Test, Deployers {
         token.approve(address(swapRouter), type(uint256).max);
         token.approve(address(modifyLiquidityRouter), type(uint256).max);
         
-        //Initcializamos la pool
+        //Inicializamos la pool
         (key,) = initPool(
             ethCurrency, //Currency 0 = ETH
             tokenCurrency, // Currency 1 = TOKEN

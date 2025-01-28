@@ -11,7 +11,7 @@ import {Hooks} from "v4-core/libraries/Hooks.sol";
 
 contract PointsHook is BaseHook, ERC20 {
     // Usamos BalanceDeltaLibrary para añadir
-    // funciones que nos ayuden sobr e los tipos de datos en BalanceDelta
+    // funciones que nos ayuden sobre los tipos de datos en BalanceDelta
     using BalanceDeltaLibrary for BalanceDelta;
     
     //Inicializamos BaseHook y ERC20
@@ -66,10 +66,10 @@ contract PointsHook is BaseHook, ERC20 {
         if (!swapParams.zeroForOne) return (this.afterSwap.selector,0);
         
         //Minteamos puntos igual al 20% de la cantidad de ETH que se gasto
-        //desde que es un seap ZeroForOne:
+        //desde que es un sea ZeroForOne:
         //if amountSpecified < 0:
         //    este sería un swap "exact input for output"
-        //    la cantidad de ETH que se gastó es iguala amountSpecified
+        //    la cantidad de ETH que se gastó es igual a amountSpecified
         // if amountSpecified > 0:
         //    este sería un swap "exact output for input"
         //      la cantidad de ETH que se gasta es igual a BalanceDelta.amount0()
