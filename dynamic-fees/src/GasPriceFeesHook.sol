@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.26;
 
 import {BaseHook} from "v4-periphery/src/utils/BaseHook.sol";
 import {IPoolManager} from "v4-core/interfaces/IPoolManager.sol";
@@ -56,8 +56,8 @@ contract GasPriceFeesHook is BaseHook {
     function _beforeInitialize( 
         address,
         PoolKey calldata key,
-        uint160,
-        bytes calldata) internal override returns (bytes4) {
+        uint160
+        ) internal override returns (bytes4) {
             //La funcion `.isDynamicFee()` viene de usar 
             //la librería `SwapFeeLibrary` para `uint24`
             if (!key.fee.isDynamicFee()) revert MustUseDynamicFee();
@@ -70,7 +70,7 @@ contract GasPriceFeesHook is BaseHook {
         SwapParams calldata,
         bytes calldata
     )
-    external override returns (bytes4, BeforeSwapDelta, uint24) {
+    internal override returns (bytes4, BeforeSwapDelta, uint24) {
         uint24 fee = getFee();
         //Si quisieramos hacer un update de las fees del LP para una mayor duración que cada vez que 
         //haya un swap -> poolManager.updateDynamicLPFee(key,fee);
@@ -86,14 +86,14 @@ contract GasPriceFeesHook is BaseHook {
         SwapParams calldata,
         BalanceDelta, 
         bytes calldata
-    ) external override returns (bytes4, int128) {
+    ) internal override returns (bytes4, int128) {
         updateMovingAverage();
         return (this.afterSwap.selector, 0);
     }
 
     //Función para actualizar nuestro precio promedio del gas
     function updateMovingAverage() internal {
-        uint128 gasPrice = uint128(tx.gasPrice);
+        uint128 gasPrice = uint128(tx.gasprice);
 
         // Nuevo promedio = ((Viejo Promedio * # txns tracked) + Precio actual del gas) / (# de txns tracked +1)
         movingAverageGasPrice = ((movingAverageGasPrice * 
@@ -104,7 +104,7 @@ contract GasPriceFeesHook is BaseHook {
     }
 
     function getFee() internal view returns (uint24) {
-        uint128 gasPrice = uint128(tx.gasPrice);
+        uint128 gasPrice = uint128(tx.gasprice);
 
         //Si el gasPrice > movingAverageGasPrice * 1.1,
         //entonces dividimos las fees a la mitad
