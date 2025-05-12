@@ -23,6 +23,51 @@ contract TestGasPriceFeesHook is Test, Deployers {
     GasPriceFeesHook hook;
     
     function setUp() public {
-        // TODOXW
+        // Deployar uni v4
+        deployFreshManagerAndRouters();
+        
+        //Deployar, mintear tokens y aprovar los contratos periféricos
+        //para dos tokens
+        deployMintAndApprove2Currencies();
+        
+        //Deployar nuestro hook con las proper flags
+        address hookAddress = address(
+            uint160(
+                Hooks.BEFORE_INITIALIZE_FLAG |
+                Hooks.BEFORE_SWAP_FLAG |
+                Hooks.AFTER_SWAP_FLAG
+            )
+        );
+        
+        
+        //setear el precio del gas = 10 wei  y deployar nuestro hook
+        vm.txGasPrice(10 gwei);
+        deployCodeTo("GasPricesHook",
+            abi.encode(manager),
+            hookAddress);
+        hook = GasPriceFeesHook(hookAddress);
+        
+        // Inicializar la Pool
+        (key,) = initPool(
+            currency0,
+            currency1,
+            hook,
+            LPFeeLibrary.DYNAMIC_FEE_FLAG,
+            SQRT_PRICE_1_1,
+            ZERO_BYTES
+        );
+        
+        //Agregamos liquidez
+        modifyLiquidityRouter.modifyLiquidity(
+            key,
+            IPoolManager.ModifyLiquidityParams({
+                tickLower: -60,
+                tickUpper: 60,
+                liquidityDelta: 100 ether,
+                salt: bytes32(0)
+            }),
+            ZERO_BYTES
+        );
+
     }
 }
