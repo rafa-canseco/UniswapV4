@@ -5,6 +5,8 @@
 Vamos a crear un hook que reparta ERC-20 tokens como puntos ante ciertos swaps
 e interacciones con los pools de liquidez.
 
+- Nota: Este es un contrato hook ilustrativo, el diseño no está listo para producción y tiene muchas áreas de oportunidad.
+
 ## Breakdown
 
 Imaginemos que tenemos un token llamado `TOKEN` Y queremos añadir un hook en los
@@ -20,7 +22,7 @@ llamado `POINTS` cuando las acciones que queremos se realicen.
 
 1.-Cuando un Swap ocurre que compra `TOKEN` en cambio de `ETH`,vamos
 a mintear `POINTS` equivalentes al 20% de la cantidad de cuanto
-`ETH` usó el el usuario en el swap.
+`ETH` usó el usuario en el swap.
 
 2.-Cuando alguien agrega liquidez, vamos a mintear `POINTS` equivalentes al
 a cuanto `ETH` es agregado al pool.
@@ -171,3 +173,4 @@ optimizer_runs = 800
 via_ir = false
 ffi = true
 ```
+
